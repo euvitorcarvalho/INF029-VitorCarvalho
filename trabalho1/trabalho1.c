@@ -11,10 +11,10 @@
 //  trabalho
 
 //  ----- Dados do Aluno -----
-//  Nome:
-//  email:
-//  Matrícula:
-//  Semestre:
+//  Nome: Vitor Carvalho
+//  email: euvitordev@proton.me
+//  Matrícula: 20261160029
+//  Semestre: 2
 
 //  Copyright © 2016 Renato Novais. All rights reserved.
 // Última atualização: 07/05/2021 - 19/08/2016 - 17/10/2025
@@ -331,9 +331,33 @@ int q5(int num) {
     Quantidade de vezes que número de busca ocorre em número base
  */
 
-int q6(int numerobase, int numerobusca) {
-  int qtdOcorrencias;
-  return qtdOcorrencias;
+int q6(int numerobase, int numerobusca)
+{
+    char base[32], busca[32];
+    int qtdOcorrencias = 0;
+    int i, j;
+
+    sprintf(base, "%d", numerobase);
+    sprintf(busca, "%d", numerobusca);
+
+    if (numerobusca < 0 || numerobase < 0)
+        return 0;
+
+    if (numerobusca == 0)
+        strcpy(busca, "0");
+
+    for (i = 0; base[i] != '\0'; i++) {
+        for (j = 0; busca[j] != '\0'; j++) {
+            if (base[i + j] == '\0' ||
+                base[i + j] != busca[j])
+                break;
+        }
+
+        if (busca[j] == '\0')
+            qtdOcorrencias++;
+    }
+
+    return qtdOcorrencias;
 }
 
 /*
@@ -347,9 +371,49 @@ int q6(int numerobase, int numerobusca) {
     1 se achou 0 se não achou
  */
 
-int q7(char matriz[8][10], char palavra[5]) {
-  int achou;
-  return achou;
+int q7(char matriz[8][10], char palavra[5])
+{
+    int direcoes[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        { 0, -1},           { 0, 1},
+        { 1, -1}, { 1, 0},  { 1, 1}
+    };
+
+    int linha, coluna, d, k;
+    int tamanho = 0;
+
+    while (tamanho < 5 && palavra[tamanho] != '\0')
+        tamanho++;
+
+    if (tamanho == 0)
+        return 0;
+
+    for (linha = 0; linha < 8; linha++) {
+        for (coluna = 0; coluna < 10; coluna++) {
+            for (d = 0; d < 8; d++) {
+                int achou = 1;
+
+                for (k = 0; k < tamanho; k++) {
+                    int novaLinha =
+                        linha + k * direcoes[d][0];
+                    int novaColuna =
+                        coluna + k * direcoes[d][1];
+
+                    if (novaLinha < 0 || novaLinha >= 8 ||
+                        novaColuna < 0 || novaColuna >= 10 ||
+                        matriz[novaLinha][novaColuna] != palavra[k]) {
+                        achou = 0;
+                        break;
+                    }
+                }
+
+                if (achou)
+                    return 1;
+            }
+        }
+    }
+
+    return 0;
 }
 
 DataQuebrada quebraData(char data[]) {
