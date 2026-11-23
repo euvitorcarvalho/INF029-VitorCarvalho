@@ -4,6 +4,8 @@
 
 #include "trabalho2.h"
 
+int ehPosicaoValida(int posicao);
+
 int* vetorPrincipal[TAM];
 
 /*
@@ -19,19 +21,27 @@ Rertono (int)
 */
 int criarEstruturaAuxiliar(int posicao, int tamanho) {
   int retorno = 0;
-  for (int i = 0; i < TAM; i++) {
-    if (vetorPrincipal[i] != NULL) {
-      retorno = JA_TEM_ESTRUTURA_AUXILIAR;
-    }
-  }
+
   // se posição é um valor válido {entre 1 e 10}
-  retorno = POSICAO_INVALIDA;
-  // o tamanho ser muito grande
-  retorno = SEM_ESPACO_DE_MEMORIA;
-  // o tamanho nao pode ser menor que 1
-  retorno = TAMANHO_INVALIDO;
-  // deu tudo certo, crie
-  retorno = SUCESSO;
+  if (ehPosicaoValida(posicao) == POSICAO_INVALIDA) {
+    retorno = POSICAO_INVALIDA;
+  } else if (tamanho < 1) {
+    retorno = TAMANHO_INVALIDO;
+  } else if (vetorPrincipal[posicao - 1] != NULL) {
+    retorno = JA_TEM_ESTRUTURA_AUXILIAR;
+  } else {
+    int* novo;
+
+    novo = malloc((tamanho + 2) * sizeof(int));
+    if (novo != NULL) {
+      novo[0] = tamanho;
+      novo[1] = 0;
+      vetorPrincipal[posicao - 1] = novo;
+      retorno = SUCESSO;
+    } else {
+      retorno = SEM_ESPACO_DE_MEMORIA;
+    }    
+  }
 
   return retorno;
 }
@@ -239,10 +249,6 @@ Objetivo: inicializa o programa. deve ser chamado ao inicio do programa
 void inicializar() {
   for (int i = 0; i < TAM; i++) {
     vetorPrincipal[i] = NULL;
-  }
-
-  for (int i = 0; i < TAM; i++) {
-    printf("%p", vetorPrincipal[i]);
   }
 }
 
