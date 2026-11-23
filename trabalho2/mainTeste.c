@@ -18,9 +18,9 @@ void testeListaEncadeada();
 int main()
 {
     inicializar();
-    // testeInserirSemNada();
+    testeInserirSemNada();
     testeCriarEstrutura();
-    // testeInserirComEstrutura();
+    testeInserirComEstrutura();
     // testeExcluir();
     // testeExcluirNumeroEspecifico();
     // testeListar();

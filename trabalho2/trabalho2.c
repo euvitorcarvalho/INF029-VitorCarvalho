@@ -40,7 +40,7 @@ int criarEstruturaAuxiliar(int posicao, int tamanho) {
       retorno = SUCESSO;
     } else {
       retorno = SEM_ESPACO_DE_MEMORIA;
-    }    
+    }
   }
 
   return retorno;
@@ -61,6 +61,17 @@ int inserirNumeroEmEstrutura(int posicao, int valor) {
   int temEspaco = 0;
   int posicao_invalida = 0;
 
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+      if (vetorPrincipal[posicao - 1][0] > vetorPrincipal[posicao - 1][1]) {
+        temEspaco = 1;
+      }
+    }
+  }
+
   if (posicao_invalida)
     retorno = POSICAO_INVALIDA;
   else {
@@ -68,6 +79,9 @@ int inserirNumeroEmEstrutura(int posicao, int valor) {
     if (existeEstruturaAuxiliar) {
       if (temEspaco) {
         // insere
+        int indice = vetorPrincipal[posicao - 1][1] + 2;
+        vetorPrincipal[posicao - 1][indice] = valor;
+        vetorPrincipal[posicao - 1][1]++;
         retorno = SUCESSO;
       } else {
         retorno = SEM_ESPACO;
@@ -212,6 +226,34 @@ estrutura
 */
 int getQuantidadeElementosEstruturaAuxiliar(int posicao) {
   int retorno = 0;
+  int existeEstruturaAuxiliar = 0;
+  int estruturaVazia = 0;
+  int posicao_invalida = 0;
+
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+      if (vetorPrincipal[posicao -1][1] == 0) {
+        estruturaVazia = 1;
+      }
+    }
+  }
+
+  if (posicao_invalida) {
+    retorno = POSICAO_INVALIDA;
+  } else {
+    if (existeEstruturaAuxiliar) {
+      if (!estruturaVazia) {
+        retorno = vetorPrincipal[posicao - 1][1];
+      } else {
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+      }
+    } else {
+      retorno = SEM_ESTRUTURA_AUXILIAR;
+    }
+  }
 
   return retorno;
 }
