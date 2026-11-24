@@ -106,7 +106,37 @@ Rertono (int)
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
 int excluirNumeroDoFinaldaEstrutura(int posicao) {
-  int retorno = SUCESSO;
+  int retorno = 0;
+  int existeEstruturaAuxiliar = 0;
+  int estruturaVazia = 0;
+  int posicao_invalida = 0;
+
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+      if (vetorPrincipal[posicao - 1][1] == 0) {
+        estruturaVazia = 1;
+      }
+    }
+  }
+
+  if (posicao_invalida) {
+    retorno = POSICAO_INVALIDA;
+  } else {
+    if (existeEstruturaAuxiliar) {
+      if (!estruturaVazia) {
+        vetorPrincipal[posicao - 1][1]--;
+        retorno = SUCESSO;
+      } else {
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+      }
+    } else {
+      retorno = SEM_ESTRUTURA_AUXILIAR;
+    }
+  }
+
   return retorno;
 }
 
@@ -235,7 +265,7 @@ int getQuantidadeElementosEstruturaAuxiliar(int posicao) {
   } else {
     if (vetorPrincipal[posicao - 1] != NULL) {
       existeEstruturaAuxiliar = 1;
-      if (vetorPrincipal[posicao -1][1] == 0) {
+      if (vetorPrincipal[posicao - 1][1] == 0) {
         estruturaVazia = 1;
       }
     }
