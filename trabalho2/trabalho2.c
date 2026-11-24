@@ -178,6 +178,29 @@ Posição inválida para estrutura auxiliar
 */
 int getDadosEstruturaAuxiliar(int posicao, int vetorAux[]) {
   int retorno = 0;
+  int existeEstruturaAuxiliar = 0;
+  int posicao_invalida = 0;
+
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+    }
+  }
+
+  if (posicao_invalida) {
+    retorno = POSICAO_INVALIDA;
+  } else {
+    if (existeEstruturaAuxiliar) {
+      for (int i = 0, j = 2; i < vetorPrincipal[posicao - 1][1]; i++, j++) {
+        vetorAux[i] = vetorPrincipal[posicao - 1][j];
+      }
+      retorno = SUCESSO;
+    } else {
+      retorno = SEM_ESTRUTURA_AUXILIAR;
+    }
+  }
 
   return retorno;
 }
