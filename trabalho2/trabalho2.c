@@ -4,6 +4,8 @@
 
 #include "trabalho2.h"
 
+int ehPosicaoValida(int posicao);
+
 int* vetorPrincipal[TAM];
 
 /*
@@ -19,19 +21,27 @@ Rertono (int)
 */
 int criarEstruturaAuxiliar(int posicao, int tamanho) {
   int retorno = 0;
-  for (int i = 0; i < TAM; i++) {
-    if (vetorPrincipal[i] != NULL) {
-      retorno = JA_TEM_ESTRUTURA_AUXILIAR;
+
+  // se posição é um valor válido {entre 1 e 10}
+  if (ehPosicaoValida(posicao) == POSICAO_INVALIDA) {
+    retorno = POSICAO_INVALIDA;
+  } else if (tamanho < 1) {
+    retorno = TAMANHO_INVALIDO;
+  } else if (vetorPrincipal[posicao - 1] != NULL) {
+    retorno = JA_TEM_ESTRUTURA_AUXILIAR;
+  } else {
+    int* novo;
+
+    novo = malloc((tamanho + 2) * sizeof(int));
+    if (novo != NULL) {
+      novo[0] = tamanho;
+      novo[1] = 0;
+      vetorPrincipal[posicao - 1] = novo;
+      retorno = SUCESSO;
+    } else {
+      retorno = SEM_ESPACO_DE_MEMORIA;
     }
   }
-  // se posição é um valor válido {entre 1 e 10}
-  retorno = POSICAO_INVALIDA;
-  // o tamanho ser muito grande
-  retorno = SEM_ESPACO_DE_MEMORIA;
-  // o tamanho nao pode ser menor que 1
-  retorno = TAMANHO_INVALIDO;
-  // deu tudo certo, crie
-  retorno = SUCESSO;
 
   return retorno;
 }
@@ -51,6 +61,17 @@ int inserirNumeroEmEstrutura(int posicao, int valor) {
   int temEspaco = 0;
   int posicao_invalida = 0;
 
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+      if (vetorPrincipal[posicao - 1][0] > vetorPrincipal[posicao - 1][1]) {
+        temEspaco = 1;
+      }
+    }
+  }
+
   if (posicao_invalida)
     retorno = POSICAO_INVALIDA;
   else {
@@ -58,6 +79,9 @@ int inserirNumeroEmEstrutura(int posicao, int valor) {
     if (existeEstruturaAuxiliar) {
       if (temEspaco) {
         // insere
+        int indice = vetorPrincipal[posicao - 1][1] + 2;
+        vetorPrincipal[posicao - 1][indice] = valor;
+        vetorPrincipal[posicao - 1][1]++;
         retorno = SUCESSO;
       } else {
         retorno = SEM_ESPACO;
@@ -82,7 +106,37 @@ Rertono (int)
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
 int excluirNumeroDoFinaldaEstrutura(int posicao) {
-  int retorno = SUCESSO;
+  int retorno = 0;
+  int existeEstruturaAuxiliar = 0;
+  int estruturaVazia = 0;
+  int posicao_invalida = 0;
+
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+      if (vetorPrincipal[posicao - 1][1] == 0) {
+        estruturaVazia = 1;
+      }
+    }
+  }
+
+  if (posicao_invalida) {
+    retorno = POSICAO_INVALIDA;
+  } else {
+    if (existeEstruturaAuxiliar) {
+      if (!estruturaVazia) {
+        vetorPrincipal[posicao - 1][1]--;
+        retorno = SUCESSO;
+      } else {
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+      }
+    } else {
+      retorno = SEM_ESTRUTURA_AUXILIAR;
+    }
+  }
+
   return retorno;
 }
 
@@ -202,6 +256,34 @@ estrutura
 */
 int getQuantidadeElementosEstruturaAuxiliar(int posicao) {
   int retorno = 0;
+  int existeEstruturaAuxiliar = 0;
+  int estruturaVazia = 0;
+  int posicao_invalida = 0;
+
+  if (posicao > 10 || posicao < 1) {
+    posicao_invalida = 1;
+  } else {
+    if (vetorPrincipal[posicao - 1] != NULL) {
+      existeEstruturaAuxiliar = 1;
+      if (vetorPrincipal[posicao - 1][1] == 0) {
+        estruturaVazia = 1;
+      }
+    }
+  }
+
+  if (posicao_invalida) {
+    retorno = POSICAO_INVALIDA;
+  } else {
+    if (existeEstruturaAuxiliar) {
+      if (!estruturaVazia) {
+        retorno = vetorPrincipal[posicao - 1][1];
+      } else {
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+      }
+    } else {
+      retorno = SEM_ESTRUTURA_AUXILIAR;
+    }
+  }
 
   return retorno;
 }
@@ -239,10 +321,6 @@ Objetivo: inicializa o programa. deve ser chamado ao inicio do programa
 void inicializar() {
   for (int i = 0; i < TAM; i++) {
     vetorPrincipal[i] = NULL;
-  }
-
-  for (int i = 0; i < TAM; i++) {
-    printf("%p", vetorPrincipal[i]);
   }
 }
 
