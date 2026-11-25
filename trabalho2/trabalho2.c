@@ -394,10 +394,11 @@ Objetivo: inicializa o programa. deve ser chamado ao inicio do programa
 
 */
 
-void inicializar() {
-  for (int i = 0; i < TAM; i++) {
-    vetorPrincipal[i] = NULL;
-  }
+void finalizar(void) {
+    for (int pos = 0; pos < TAM; pos++) {
+        free(vetorPrincipal[pos]);
+        vetorPrincipal[pos] = NULL;
+    }
 }
 
 /*
