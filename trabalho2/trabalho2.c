@@ -402,13 +402,52 @@ Retorno (No*)
     NULL, caso não tenha nenhum número nas listas
     No*, ponteiro para o início da lista com cabeçote
 */
-No* montarListaEncadeadaComCabecote() { return NULL; }
+No* montarListaEncadeadaComCabecote(void) {
+  No *cabecote = NULL;
+  No *ultimo = NULL;
+
+  for (int pos = 0; pos < TAM; pos++) {
+    int *estrutura = vetorPrincipal[pos];
+    if (estrutura == NULL) continue;
+
+    for (int i = 0; i < estrutura[1]; i++) {
+      if (cabecote == NULL) {
+        cabecote = malloc(sizeof(No));
+        if (cabecote == NULL) return NULL;
+
+        cabecote->conteudo = 0;
+        cabecote->prox = NULL;
+        ultimo = cabecote;
+      }
+
+      No *novo = malloc(sizeof(No));
+      if (novo == NULL) {
+        destruirListaEncadeadaComCabecote(&cabecote);
+        return NULL;
+      }
+
+      novo->conteudo = estrutura[i + 2];
+      novo->prox = NULL;
+      ultimo->prox = novo;
+      ultimo = novo;
+    }
+  }
+
+  return cabecote;
+}
 
 /*
 Objetivo: retorna os números da lista enceada com cabeçote armazenando em
 vetorAux. Retorno void
 */
-void getDadosListaEncadeadaComCabecote(No* inicio, int vetorAux[]) {}
+void getDadosListaEncadeadaComCabecote(No* inicio, int vetorAux[]) {
+  if (inicio == NULL || vetorAux == NULL) return;
+
+  int indice = 0;
+  for (No *atual = inicio->prox; atual != NULL; atual = atual->prox) {
+    vetorAux[indice++] = atual->conteudo;
+  }
+}
 
 /*
 Objetivo: Destruir a lista encadeada com cabeçote a partir de início.
@@ -417,7 +456,18 @@ O ponteiro inicio deve ficar com NULL.
 Retorno
     void.
 */
-void destruirListaEncadeadaComCabecote(No** inicio) {}
+void destruirListaEncadeadaComCabecote(No** inicio) {
+  if (inicio == NULL) return;
+
+  No *atual = *inicio;
+  while (atual != NULL) {
+    No *proximo = atual->prox;
+    free(atual);
+    atual = proximo;
+  }
+
+  *inicio = NULL;
+}
 
 /*
 Objetivo: inicializa o programa. deve ser chamado ao inicio do programa
