@@ -234,9 +234,21 @@ Rertono (int)
 Posição inválida para estrutura auxiliar
 */
 int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[]) {
-  int retorno = 0;
+    int retorno = getDadosEstruturaAuxiliar(posicao, vetorAux);
+    if (retorno != SUCESSO)
+        return retorno;
 
-  return retorno;
+    int quantidade = vetorPrincipal[posicao - 1][1];
+    for (int i = 0; i < quantidade - 1; i++) {
+        for (int j = 0; j < quantidade - 1 - i; j++) {
+            if (vetorAux[j] > vetorAux[j + 1]) {
+                int tmp = vetorAux[j];
+                vetorAux[j] = vetorAux[j + 1];
+                vetorAux[j + 1] = tmp;
+            }
+        }
+    }
+    return SUCESSO;
 }
 
 /*
