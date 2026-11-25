@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define TAM 10
@@ -279,26 +280,24 @@ Rertono (int)
 estão vazias
 */
 int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vetorAux[]) {
-    int retorno = getDadosDeTodasEstruturasAuxiliares(vetorAux);
-    if (retorno != SUCESSO)
-        return retorno;
+  int retorno = getDadosDeTodasEstruturasAuxiliares(vetorAux);
+  if (retorno != SUCESSO) return retorno;
 
-    int quantidade = 0;
-    for (int pos = 0; pos < TAM; pos++) {
-        if (vetorPrincipal[pos] != NULL)
-            quantidade += vetorPrincipal[pos][1];
-    }
+  int quantidade = 0;
+  for (int pos = 0; pos < TAM; pos++) {
+    if (vetorPrincipal[pos] != NULL) quantidade += vetorPrincipal[pos][1];
+  }
 
-    for (int i = 0; i < quantidade - 1; i++) {
-        for (int j = 0; j < quantidade - 1 - i; j++) {
-            if (vetorAux[j] > vetorAux[j + 1]) {
-                int tmp = vetorAux[j];
-                vetorAux[j] = vetorAux[j + 1];
-                vetorAux[j + 1] = tmp;
-            }
-        }
+  for (int i = 0; i < quantidade - 1; i++) {
+    for (int j = 0; j < quantidade - 1 - i; j++) {
+      if (vetorAux[j] > vetorAux[j + 1]) {
+        int tmp = vetorAux[j];
+        vetorAux[j] = vetorAux[j + 1];
+        vetorAux[j + 1] = tmp;
+      }
     }
-    return SUCESSO;
+  }
+  return SUCESSO;
 }
 
 /*
@@ -315,8 +314,39 @@ Rertono (int)
     SEM_ESPACO_DE_MEMORIA - erro na alocação do novo valor
 */
 int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho) {
-  int retorno = 0;
-  return retorno;
+  if (ehPosicaoValida(posicao) == POSICAO_INVALIDA) {
+    return POSICAO_INVALIDA;
+  }
+
+  if (vetorPrincipal[posicao - 1] == NULL) {
+    return SEM_ESTRUTURA_AUXILIAR;
+  }
+
+  int* estrutura = vetorPrincipal[posicao - 1];
+
+  long long calculo = (long long)estrutura[0] + novoTamanho;
+
+  if (calculo < 1 || calculo > INT_MAX - 2) {
+    return NOVO_TAMANHO_INVALIDO;
+  }
+
+  int novaCapacidade = (int)calculo;
+
+  int* temp = realloc(estrutura, (size_t)(novaCapacidade + 2) * sizeof(int));
+
+  if (temp == NULL) {
+    return SEM_ESPACO_DE_MEMORIA;
+  }
+
+  vetorPrincipal[posicao - 1] = temp;
+
+  temp[0] = novaCapacidade;
+
+  if (temp[1] > novaCapacidade) {
+    temp[1] = novaCapacidade;
+  }
+
+  return SUCESSO;
 }
 
 /*
@@ -394,11 +424,10 @@ Objetivo: inicializa o programa. deve ser chamado ao inicio do programa
 
 */
 
-void finalizar(void) {
-    for (int pos = 0; pos < TAM; pos++) {
-        free(vetorPrincipal[pos]);
-        vetorPrincipal[pos] = NULL;
-    }
+void inicializar() {
+  for (int i = 0; i < TAM; i++) {
+    vetorPrincipal[i] = NULL;
+  }
 }
 
 /*
@@ -407,4 +436,9 @@ para poder liberar todos os espaços de memória das estruturas auxiliares.
 
 */
 
-void finalizar() {}
+void finalizar(void) {
+  for (int pos = 0; pos < TAM; pos++) {
+    free(vetorPrincipal[pos]);
+    vetorPrincipal[pos] = NULL;
+  }
+}
