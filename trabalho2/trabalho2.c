@@ -279,8 +279,26 @@ Rertono (int)
 estão vazias
 */
 int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vetorAux[]) {
-  int retorno = 0;
-  return retorno;
+    int retorno = getDadosDeTodasEstruturasAuxiliares(vetorAux);
+    if (retorno != SUCESSO)
+        return retorno;
+
+    int quantidade = 0;
+    for (int pos = 0; pos < TAM; pos++) {
+        if (vetorPrincipal[pos] != NULL)
+            quantidade += vetorPrincipal[pos][1];
+    }
+
+    for (int i = 0; i < quantidade - 1; i++) {
+        for (int j = 0; j < quantidade - 1 - i; j++) {
+            if (vetorAux[j] > vetorAux[j + 1]) {
+                int tmp = vetorAux[j];
+                vetorAux[j] = vetorAux[j + 1];
+                vetorAux[j + 1] = tmp;
+            }
+        }
+    }
+    return SUCESSO;
 }
 
 /*
