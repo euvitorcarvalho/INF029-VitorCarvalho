@@ -153,8 +153,27 @@ estrutura na posição 'posicao' ESTRUTURA_AUXILIAR_VAZIA - estrutura vazia
 
 */
 int excluirNumeroEspecificoDeEstrutura(int posicao, int valor) {
-  int retorno = SUCESSO;
-  return retorno;
+    if (posicao < 1 || posicao > TAM)
+        return POSICAO_INVALIDA;
+
+    int *vet = vetorPrincipal[posicao - 1];
+    if (vet == NULL)
+        return SEM_ESTRUTURA_AUXILIAR;
+
+    int quantidade = vet[1];
+    if (quantidade == 0)
+        return ESTRUTURA_AUXILIAR_VAZIA;
+
+    for (int i = 0; i < quantidade; i++) {
+        if (vet[i + 2] == valor) {
+            for (int j = i; j < quantidade - 1; j++) {
+                vet[j + 2] = vet[j + 3];
+            }
+            vet[1]--;
+            return SUCESSO;
+        }
+    }
+    return NUMERO_INEXISTENTE;
 }
 
 // se posição é um valor válido {entre 1 e 10}
